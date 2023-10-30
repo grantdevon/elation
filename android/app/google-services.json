@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "745903651893",
+    "project_id": "elation-bc5f0",
+    "storage_bucket": "elation-bc5f0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:745903651893:android:33413bf475a87acb69057c",
+        "android_client_info": {
+          "package_name": "com.elation"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPGiZ2jgiCYexmd-a5j2PkXzcyQ59BObQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
