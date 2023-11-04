@@ -1,10 +1,11 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import FeedCard from '../../components/FeedCard/FeedCard'
 
 const Feed = () => {
   return (
     <View>
-      <Text>Feed</Text>
+      <FeedCard />
     </View>
   )
 }

@@ -9,4 +9,13 @@ export const getCurrentDate = () => {
   
     return formattedDate;
   };
+
+export const getCurrentTime = () => {
+    const currentTime = new Date();
+    const hours = String(currentTime.getHours()).padStart(2, '0');
+    const minutes = String(currentTime.getMinutes()).padStart(2, '0');
+    const seconds = String(currentTime.getSeconds()).padStart(2, '0');
+    
+    return `${hours}:${minutes}:${seconds}`;
+  }
   

@@ -1,17 +1,37 @@
 import firestore from '@react-native-firebase/firestore';
 import {ICoords} from '../Interfaces/Map';
-import { getCurrentDate } from '../Utils/Date';
+import { getCurrentDate, getCurrentTime } from '../Utils/DateAndTime';
 
-export const sendDoc = (coords: ICoords, type: string) => {
+export const sendDoc = (collection: string, coords: ICoords, type: string) => {
   firestore()
-    .collection('Reports')
-    .doc(type)
-    .collection(getCurrentDate())
-    .add(coords)
+    .collection(collection)
+    .add({
+      coords: coords,
+      type: type,
+      date: getCurrentDate(),
+      time: getCurrentTime()
+    })
     .then(() => {
-      console.log('User added!');
+      console.log('Doc created!');
     })
     .catch(error => {
       console.log(error);
     });
 };
+
+export const fetchDocuments = async (collection: string) => {  
+  try {
+    const doc = await firestore()
+      .collection(collection)
+      .where('date', '==', getCurrentDate())
+      .get();
+      let mapData:[] = []
+      doc.docs.map(map => {
+       mapData.push(map.data())
+      })
+    return mapData;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
