@@ -6,5 +6,9 @@ export interface ICoords {
 export interface IMapData {
     latitude: number
     longitude:  number,
-    weight: number
+    weight?: number
+}
+
+export interface IMapPointData {
+    coords: ICoords[]
 }

@@ -1,20 +1,25 @@
-import { Alert, StyleSheet, View } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import MapView, { Heatmap, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import { FAB } from '@rneui/themed';
-import { ICoords, IMapData } from '../../Interfaces/Map';
-import { showToast } from '../../Utils/Toast';
+import {Alert, StyleSheet, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import MapView, {Heatmap, Marker, PROVIDER_GOOGLE} from 'react-native-maps';
+import {FAB} from '@rneui/themed';
+import {ICoords, IMapData, IMapPointData} from '../../Interfaces/Map';
+import {showToast} from '../../Utils/Toast';
 import GetLocation from 'react-native-get-location';
-import { fetchDocuments, sendDoc } from '../../services/firebase';
+import {fetchDocuments, sendDoc} from '../../services/firebase';
 
 const Map = () => {
   const [currentLocation, setCurrentLocation] = useState({
     latitude: 0,
-    longitude: 0
+    longitude: 0,
   });
+
   const [markerVisible, setMarkerVisible] = useState(false);
+  const [heatMapMarker, setHeatMapMarker] = useState<boolean>(true);
+  const [pointMapMarker, setPointMapMarker] = useState<boolean>(false);
+
   const [eventType, setEventType] = useState<string>('');
-  const [mapData, setMapData] = useState<IMapData[]>([])
+  const [heatMapData, setHeatMapData] = useState<IMapData[]>([]);
+  const [pointMapData, setPointMapData] = useState<IMapPointData[]>([]);
 
   useEffect(() => {
     GetLocation.getCurrentPosition({
@@ -24,33 +29,34 @@ const Map = () => {
       .then(location => {
         setCurrentLocation({
           latitude: location.latitude,
-          longitude: location.longitude
+          longitude: location.longitude,
         });
       })
       .catch(error => {
-        const { code, message } = error;
+        const {code, message} = error;
         console.warn(code, message);
       });
   }, []);
 
   useEffect(() => {
     const fetchMapData = async () => {
-      const mapPoints = await fetchDocuments('Reports') 
-      let tempArr: [] = []     
-      mapPoints?.forEach(point => {        
-        tempArr.push({
+      const mapPoints = await fetchDocuments('Reports');
+      let tempHeatMapArr: [] = [];
+      let tempPointMapArr: [] = [];
+      mapPoints?.forEach(point => {
+        tempHeatMapArr.push({
           latitude: point.coords.latitude,
           longitude: point.coords.longitude,
-          weight: 3
-        })
-      })
-      setMapData(tempArr)
-
-    }    
-    fetchMapData()
-  }, [])
-
-
+          weight: 3,
+          text: 'string'
+        });
+        tempPointMapArr.push(point);
+      });      
+      setHeatMapData(tempHeatMapArr);
+      setPointMapData(tempPointMapArr);
+    };
+    fetchMapData();
+  }, []);
 
   const logReport = () => {
     Alert.alert(
@@ -73,7 +79,7 @@ const Map = () => {
     showToast(
       'success',
       'Hi!',
-      'Please make sure to long press on the marker to drag it.'
+      'Please make sure to long press on the marker to drag it.',
     );
     setEventType(type);
     setMarkerVisible(true);
@@ -93,17 +99,26 @@ const Map = () => {
   };
 
   const sendEvent = (coords: ICoords, type: string) => {
-    setMapData((prevMapData) => [
+    setHeatMapData(prevMapData => [
       ...prevMapData,
       {
         latitude: coords.latitude,
         longitude: coords.longitude,
-        weight: 3, // You can adjust the weight as needed
+        weight: 3,
       },
     ]);
+
+    setPointMapData(prevMapData => [
+      ...prevMapData,
+      {
+        latitude: coords.latitude,
+        longitude: coords.longitude,
+      },
+    ]);
+    
     setMarkerVisible(false);
     showToast('success', 'Thank you!', 'Event logged successfully!');
-    sendDoc('Reports', coords, type)
+    sendDoc('Reports', coords, type);
   };
 
   return (
@@ -124,15 +139,26 @@ const Map = () => {
             onDragEnd={e => confirmEvent(e.nativeEvent.coordinate)}
           />
         )}
-        {mapData.length > 0 && <Heatmap points={mapData} radius={50}/>}
+        {heatMapMarker && heatMapData.length > 0 && (
+          <Heatmap points={heatMapData} radius={50} />
+        )}
 
-        {/* <Heatmap points={50}/> */}
+        {pointMapMarker &&
+          pointMapData.length > 0 &&
+          pointMapData.map((marker) => (
+            <Marker
+              coordinate={{
+                latitude: marker.coords.latitude,
+                longitude: marker.coords.longitude,
+              }}
+            />
+          ))}
       </MapView>
       <FAB
         color="blue"
         placement="right"
         upperCase
-        icon={{ name: 'place', color: 'white' }}
+        icon={{name: 'place', color: 'white'}}
         onPress={logReport}
       />
     </View>
