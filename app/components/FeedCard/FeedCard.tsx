@@ -1,21 +1,13 @@
 import {StyleSheet, Text, View} from 'react-native';
-import React, { useEffect } from 'react';
-import { fetchDocuments } from '../../services/firebase';
+import React, {FC, useEffect, useState} from 'react';
+import {fetchDocuments} from '../../services/firebase';
+import {IFeedCard} from '../../Interfaces/Feed';
 
-const FeedCard = () => {
-    useEffect(() => {
-        const fetchDocs = async () => {
-          return await fetchDocuments('Reports')
-        }
-        fetchDocs()
-      }, []);
+const FeedCard: FC<IFeedCard> = ({doc}) => {
   return (
     <View style={styles.container}>
       <View style={styles.cardContainer}>
-        {/* header */}
-        <View style={styles.header}>
-
-        </View>
+        <Text>{doc.coords.latitude}</Text>
       </View>
     </View>
   );
@@ -31,11 +23,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     padding: 10,
     borderRadius: 10,
-    elevation: 2, 
+    elevation: 2,
+    height: 100,
   },
-  header: {
-
-  },
+  header: {},
 });
-
-
