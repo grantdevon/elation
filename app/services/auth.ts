@@ -4,7 +4,7 @@ import {
   signInWithEmailAndPassword,
 } from 'firebase/auth';
 import {IAuthUserObj} from '../Interfaces/Auth';
-import { auth } from '../firebase';
+import { auth } from '../firebase-config';
 
 export const createUser = (authUserObj: IAuthUserObj) => {
   createUserWithEmailAndPassword(auth, authUserObj.email, authUserObj.password)
