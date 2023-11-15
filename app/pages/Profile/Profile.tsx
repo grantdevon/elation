@@ -1,14 +1,18 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React from 'react';
+import { signOutUser } from '../../services/auth';
 
 const Profile = () => {
+
   return (
     <View>
-      <Text>Profile</Text>
+      <TouchableOpacity onPress={signOutUser}>
+        <Text>sign Out</Text>
+      </TouchableOpacity>
     </View>
-  )
-}
+  );
+};
 
-export default Profile
+export default Profile;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});

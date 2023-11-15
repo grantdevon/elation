@@ -1,22 +1,49 @@
 import {StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import Feed from './app/pages/Feed/Feed';
-import Map from './app/pages/Map/Map';
-import Profile from './app/pages/Profile/Profile';
 import Toast from 'react-native-toast-message';
+import Login from './app/pages/Login/Login';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from './app/firebase';
+import { createStackNavigator } from '@react-navigation/stack';
+import TabNavigator from './app/TabNavigator';
 
-const Tab = createBottomTabNavigator();
+
+
+// const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator()
+
 
 const App = () => {
+  const [user, setUser] = useState();
+
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      user ? setUser(user) : setUser(undefined)
+    })
+  });
+
   return (
     <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen name="Feed" component={Feed} />
-        <Tab.Screen name="Map" component={Map} />
-        <Tab.Screen name="Profile" component={Profile} />
-      </Tab.Navigator>
+      <Stack.Navigator>
+        {user ? (
+          <>
+            <Stack.Screen 
+            name="TabNav" 
+            component={TabNavigator} 
+            options={{headerShown: false}}
+            />
+          </>
+        ) : (
+          <>
+            <Stack.Screen 
+            name="Login" 
+            component={Login} 
+            />
+          </>
+        )}
+      </Stack.Navigator>
       <Toast />
     </NavigationContainer>
   );
@@ -25,3 +52,5 @@ const App = () => {
 export default App;
 
 const styles = StyleSheet.create({});
+
+
