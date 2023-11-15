@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     padding: 10,
     borderRadius: 10,
-    elevation: 2, // Add elevation to create a shadow effect
+    elevation: 2, 
   },
   header: {
 

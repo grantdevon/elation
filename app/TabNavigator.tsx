@@ -7,7 +7,7 @@ import Profile from './pages/Profile/Profile';
 
 const Tab = createBottomTabNavigator();
 
-const tabNavigator = () => {
+const TabNavigator = () => {
   return (
     <Tab.Navigator>
       <Tab.Screen name="Feed" component={Feed} />
@@ -17,6 +17,6 @@ const tabNavigator = () => {
   )
 }
 
-export default tabNavigator
+export default TabNavigator
 
 const styles = StyleSheet.create({})
