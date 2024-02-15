@@ -4,25 +4,21 @@ import {NavigationContainer} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import Login from './app/pages/Login/Login';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from './app/firebase-config';
 import { createStackNavigator } from '@react-navigation/stack';
 import TabNavigator from './app/TabNavigator';
-
-
+import { auth } from './app/firebase-config';
 
 // const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator()
 
-
 const App = () => {
   const [user, setUser] = useState();
-
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       user ? setUser(user) : setUser(undefined)
     })
-  });
+  },[]);
 
   return (
     <NavigationContainer>
